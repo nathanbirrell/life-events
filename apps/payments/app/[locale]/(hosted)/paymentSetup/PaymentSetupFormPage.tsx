@@ -66,7 +66,7 @@ export default async function ({
 }: PaymentSetupFormPageProps) {
   const { messages } = await getRequestConfig({
     locale: locale,
-    requestLocale: new Promise(() => locale),
+    requestLocale: Promise.resolve(locale),
   });
   const providerAccounts = await getRegisteredAccounts();
 

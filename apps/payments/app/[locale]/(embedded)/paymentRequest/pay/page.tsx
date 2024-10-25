@@ -79,7 +79,7 @@ export default async function Page(props: Props) {
 
   const { messages } = await getRequestConfig({
     locale: props.params.locale,
-    requestLocale: new Promise(() => props.params.locale),
+    requestLocale: Promise.resolve(props.params.locale),
   });
 
   if (!details || details.status === "draft") return notFound();

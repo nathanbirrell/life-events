@@ -19,7 +19,7 @@ export default async ({ provider, locale }: Props) => {
   const t = await getTranslations("PaymentSetup.AddStripe");
   const { messages } = await getRequestConfig({
     locale: locale,
-    requestLocale: new Promise(() => locale),
+    requestLocale: Promise.resolve(locale),
   });
 
   const errorFieldMapping = stripeValidationMap(t);

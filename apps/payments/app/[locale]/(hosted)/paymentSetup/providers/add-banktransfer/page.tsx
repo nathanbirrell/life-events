@@ -29,7 +29,7 @@ export default async (props: Props) => {
   const t = await getTranslations("PaymentSetup.AddBankTransfer");
   const { messages } = await getRequestConfig({
     locale: props.params.locale,
-    requestLocale: new Promise(() => props.params.locale),
+    requestLocale: Promise.resolve(props.params.locale),
   });
   const errorFieldMapping = bankTransferValidationMap(t);
 
