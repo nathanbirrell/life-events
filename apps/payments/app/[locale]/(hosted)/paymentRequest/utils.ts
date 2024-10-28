@@ -21,6 +21,8 @@ export async function getAmount({
   token?: string;
   prDetails: PaymentRequest;
 }) {
+  // We will always get the token coming from the integrator, but amount is optional
+  // TODO: Allow amountFromToken to be an optional field within the token, if undefined, fallback to amount from the Payment Request
   if (token && prDetails.allowAmountOverride) return getAmountFromToken(token);
 
   return prDetails.allowCustomAmount && customAmount

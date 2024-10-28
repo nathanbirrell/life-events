@@ -1,3 +1,4 @@
+import { getIssuerFromJWT, unsecureVerifyJWT } from "api-auth";
 import { JourneyStepConnectionDO } from "../../plugins/entities/journeyStepConnections/types";
 import {
   JourneyStepTypesDO,
@@ -35,7 +36,26 @@ class IntegratorEngine {
     });
   }
 
-  public processResultData(data: any) {
+  public async validateToken(token: string) {
+    const issuer = getIssuerFromJWT(token);
+    if (!issuer) {
+      throw new Error("Issuer must be set to properly validate a token");
+    }
+
+    return unsecureVerifyJWT(token);
+
+    //TODO: use this pluginJwksUrl and increase security and validations
+    // const pluginJwksUrl = integratorPluginManager
+    //   .getPluginFromIssuer(issuer as IssuerPluginKeys)
+    //   .getJwksUrl();
+
+    // return verifyJWT(token, {
+    //   jwksUrl: pluginJwksUrl,
+    //   audience: "integrator-api",
+    // });
+  }
+
+  public async processResultData(data: any) {
     return this.plugin.processResultData(data, {
       journeyId: this.journeyId,
       runId: this.runId,
