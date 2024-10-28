@@ -221,7 +221,7 @@ export const TokenBody = Type.Object({
 export type TokenBodyDO = Static<typeof TokenBody>;
 
 export const TokenPayload = Type.Object({
-  amount: Type.Number(),
+  amount: Type.Optional(Type.Number()),
 });
 export type TokenPayload = Static<typeof TokenPayload>;
 

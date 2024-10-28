@@ -14,6 +14,16 @@ export interface paths {
       };
     };
   };
+  "/token": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
   "/health": {
     get: {
       responses: {
@@ -628,7 +638,7 @@ export interface paths {
           content: {
             "application/json": {
               data: {
-                amount: number;
+                amount?: number;
               };
               metadata?: {
                 links?: {
@@ -1617,26 +1627,6 @@ export interface paths {
           redirectoptional: string;
         };
       };
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/v1/test/citizen": {
-    get: {
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: never;
-        };
-      };
-    };
-  };
-  "/api/v1/test/pub-ser": {
-    get: {
       responses: {
         /** @description Default Response */
         200: {
