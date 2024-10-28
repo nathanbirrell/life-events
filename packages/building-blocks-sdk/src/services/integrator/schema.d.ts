@@ -180,13 +180,17 @@ export interface paths {
                 steps: {
                   id: string;
                   journeyId: string;
-                  stepType: "form" | "payment" | "messaging";
+                  stepType: "form" | "payment" | "messaging" | "complete";
                   stepData:
                     | {
                         url: string;
                         title: string;
                       }
-                    | Record<string, never>;
+                    | Record<string, never>
+                    | {
+                        label: string;
+                        url: string;
+                      };
                   createdAt: string;
                   updatedAt: string;
                 }[];
@@ -414,7 +418,7 @@ export interface paths {
                 jounrneyTitle: string;
                 steps: {
                   stepId: string;
-                  type: "form" | "payment" | "messaging";
+                  type: "form" | "payment" | "messaging" | "complete";
                   resourceId: string;
                   stepSchema?: unknown;
                 }[];
@@ -726,13 +730,17 @@ export interface paths {
               data: {
                 id: string;
                 journeyId: string;
-                stepType: "form" | "payment" | "messaging";
+                stepType: "form" | "payment" | "messaging" | "complete";
                 stepData:
                   | {
                       url: string;
                       title: string;
                     }
-                  | Record<string, never>;
+                  | Record<string, never>
+                  | {
+                      label: string;
+                      url: string;
+                    };
                 createdAt: string;
                 updatedAt: string;
               };
@@ -801,13 +809,17 @@ export interface paths {
       requestBody: {
         content: {
           "application/json": {
-            stepType: "form" | "payment" | "messaging";
+            stepType: "form" | "payment" | "messaging" | "complete";
             stepData:
               | {
                   url: string;
                   title: string;
                 }
-              | Record<string, never>;
+              | Record<string, never>
+              | {
+                  label: string;
+                  url: string;
+                };
           };
         };
       };
@@ -819,13 +831,17 @@ export interface paths {
               data: {
                 id: string;
                 journeyId: string;
-                stepType: "form" | "payment" | "messaging";
+                stepType: "form" | "payment" | "messaging" | "complete";
                 stepData:
                   | {
                       url: string;
                       title: string;
                     }
-                  | Record<string, never>;
+                  | Record<string, never>
+                  | {
+                      label: string;
+                      url: string;
+                    };
                 createdAt: string;
                 updatedAt: string;
               };
@@ -960,13 +976,17 @@ export interface paths {
         content: {
           "application/json": {
             journeyId: string;
-            stepType: "form" | "payment" | "messaging";
+            stepType: "form" | "payment" | "messaging" | "complete";
             stepData:
               | {
                   url: string;
                   title: string;
                 }
-              | Record<string, never>;
+              | Record<string, never>
+              | {
+                  label: string;
+                  url: string;
+                };
           };
         };
       };
@@ -978,13 +998,17 @@ export interface paths {
               data: {
                 id: string;
                 journeyId: string;
-                stepType: "form" | "payment" | "messaging";
+                stepType: "form" | "payment" | "messaging" | "complete";
                 stepData:
                   | {
                       url: string;
                       title: string;
                     }
-                  | Record<string, never>;
+                  | Record<string, never>
+                  | {
+                      label: string;
+                      url: string;
+                    };
                 createdAt: string;
                 updatedAt: string;
               };
@@ -1534,6 +1558,98 @@ export interface paths {
             "application/json": {
               data: {
                 url: string;
+              };
+              metadata?: {
+                links?: {
+                  self: {
+                    href?: string;
+                  };
+                  next?: {
+                    href?: string;
+                  };
+                  prev?: {
+                    href?: string;
+                  };
+                  first: {
+                    href?: string;
+                  };
+                  last: {
+                    href?: string;
+                  };
+                  pages: {
+                    [key: string]: {
+                      href?: string;
+                    };
+                  };
+                };
+                totalCount?: number;
+              };
+            };
+          };
+        };
+        /** @description Default Response */
+        401: {
+          content: {
+            "application/json": {
+              code: string;
+              detail: string;
+              requestId: string;
+              name: string;
+              validation?: unknown;
+              validationContext?: string;
+            };
+          };
+        };
+        /** @description Default Response */
+        404: {
+          content: {
+            "application/json": {
+              code: string;
+              detail: string;
+              requestId: string;
+              name: string;
+              validation?: unknown;
+              validationContext?: string;
+            };
+          };
+        };
+        /** @description Default Response */
+        500: {
+          content: {
+            "application/json": {
+              code: string;
+              detail: string;
+              requestId: string;
+              name: string;
+              validation?: unknown;
+              validationContext?: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/v1/executor/get-summary": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            journeyId: string;
+            runId: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              data: {
+                runId: string;
+                title: string;
+                createdAt: string;
+                actionLabel: string;
+                returnUrl: string;
               };
               metadata?: {
                 links?: {

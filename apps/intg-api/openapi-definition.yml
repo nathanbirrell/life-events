@@ -338,6 +338,9 @@ paths:
                                 - type: string
                                   enum:
                                     - messaging
+                                - type: string
+                                  enum:
+                                    - complete
                             stepData:
                               anyOf:
                                 - type: object
@@ -360,6 +363,15 @@ paths:
                                     - title
                                 - type: object
                                   properties: {}
+                                - type: object
+                                  properties:
+                                    label:
+                                      type: string
+                                    url:
+                                      type: string
+                                  required:
+                                    - label
+                                    - url
                             createdAt:
                               type: string
                             updatedAt:
@@ -789,6 +801,9 @@ paths:
                                 - type: string
                                   enum:
                                     - messaging
+                                - type: string
+                                  enum:
+                                    - complete
                             resourceId:
                               type: string
                             stepSchema: {}
@@ -1318,6 +1333,9 @@ paths:
                           - type: string
                             enum:
                               - messaging
+                          - type: string
+                            enum:
+                              - complete
                       stepData:
                         anyOf:
                           - type: object
@@ -1340,6 +1358,15 @@ paths:
                               - title
                           - type: object
                             properties: {}
+                          - type: object
+                            properties:
+                              label:
+                                type: string
+                              url:
+                                type: string
+                            required:
+                              - label
+                              - url
                       createdAt:
                         type: string
                       updatedAt:
@@ -1573,6 +1600,9 @@ paths:
                     - type: string
                       enum:
                         - messaging
+                    - type: string
+                      enum:
+                        - complete
                 stepData:
                   anyOf:
                     - type: object
@@ -1595,6 +1625,15 @@ paths:
                         - title
                     - type: object
                       properties: {}
+                    - type: object
+                      properties:
+                        label:
+                          type: string
+                        url:
+                          type: string
+                      required:
+                        - label
+                        - url
               required:
                 - stepType
                 - stepData
@@ -1631,6 +1670,9 @@ paths:
                           - type: string
                             enum:
                               - messaging
+                          - type: string
+                            enum:
+                              - complete
                       stepData:
                         anyOf:
                           - type: object
@@ -1653,6 +1695,15 @@ paths:
                               - title
                           - type: object
                             properties: {}
+                          - type: object
+                            properties:
+                              label:
+                                type: string
+                              url:
+                                type: string
+                            required:
+                              - label
+                              - url
                       createdAt:
                         type: string
                       updatedAt:
@@ -1779,6 +1830,9 @@ paths:
                     - type: string
                       enum:
                         - messaging
+                    - type: string
+                      enum:
+                        - complete
                 stepData:
                   anyOf:
                     - type: object
@@ -1801,6 +1855,15 @@ paths:
                         - title
                     - type: object
                       properties: {}
+                    - type: object
+                      properties:
+                        label:
+                          type: string
+                        url:
+                          type: string
+                      required:
+                        - label
+                        - url
               required:
                 - journeyId
                 - stepType
@@ -1832,6 +1895,9 @@ paths:
                           - type: string
                             enum:
                               - messaging
+                          - type: string
+                            enum:
+                              - complete
                       stepData:
                         anyOf:
                           - type: object
@@ -1854,6 +1920,15 @@ paths:
                               - title
                           - type: object
                             properties: {}
+                          - type: object
+                            properties:
+                              label:
+                                type: string
+                              url:
+                                type: string
+                            required:
+                              - label
+                              - url
                       createdAt:
                         type: string
                       updatedAt:
@@ -2883,6 +2958,166 @@ paths:
                         type: string
                     required:
                       - url
+                  metadata:
+                    type: object
+                    properties:
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                          next:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                          prev:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                          first:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                          last:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                          pages:
+                            type: object
+                            additionalProperties:
+                              type: object
+                              properties:
+                                href:
+                                  type: string
+                        required:
+                          - self
+                          - first
+                          - last
+                          - pages
+                      totalCount:
+                        type: number
+                required:
+                  - data
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  detail:
+                    type: string
+                  requestId:
+                    type: string
+                  name:
+                    type: string
+                  validation: {}
+                  validationContext:
+                    type: string
+                required:
+                  - code
+                  - detail
+                  - requestId
+                  - name
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  detail:
+                    type: string
+                  requestId:
+                    type: string
+                  name:
+                    type: string
+                  validation: {}
+                  validationContext:
+                    type: string
+                required:
+                  - code
+                  - detail
+                  - requestId
+                  - name
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  detail:
+                    type: string
+                  requestId:
+                    type: string
+                  name:
+                    type: string
+                  validation: {}
+                  validationContext:
+                    type: string
+                required:
+                  - code
+                  - detail
+                  - requestId
+                  - name
+  /api/v1/executor/get-summary:
+    post:
+      tags: *a4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                journeyId:
+                  type: string
+                runId:
+                  type: string
+              required:
+                - journeyId
+                - runId
+        required: true
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      runId:
+                        type: string
+                      title:
+                        type: string
+                      createdAt:
+                        type: string
+                      actionLabel:
+                        type: string
+                      returnUrl:
+                        type: string
+                    required:
+                      - runId
+                      - title
+                      - createdAt
+                      - actionLabel
+                      - returnUrl
                   metadata:
                     type: object
                     properties:

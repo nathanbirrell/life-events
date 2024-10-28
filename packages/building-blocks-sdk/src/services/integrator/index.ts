@@ -273,4 +273,14 @@ export class Integrator {
       }),
     );
   }
+
+  async getJourneySummary(
+    data: paths["/api/v1/executor/get-summary"]["post"]["requestBody"]["content"]["application/json"],
+  ) {
+    return formatQueryResult(
+      this.client.POST("/api/v1/executor/get-summary", {
+        body: data,
+      }),
+    );
+  }
 }

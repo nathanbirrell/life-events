@@ -1,5 +1,6 @@
 import { Static } from "@sinclair/typebox";
 import {
+  CompleteStepData,
   CreateJourneyStep,
   FormStepData,
   JourneyStep,
@@ -18,4 +19,5 @@ export type UpdateJourneyStepDO = Static<typeof UpdateJourneyStep>;
 export type FormStepDataDO = Static<typeof FormStepData>;
 export type PaymentStepDataDO = Static<typeof PaymentStepData>;
 export type MessagingStepDataDO = Static<typeof MessagingStepData>;
+export type CompleteStepDataDO = Static<typeof CompleteStepData>;
 export type StepDataDO = Static<typeof StepData>;

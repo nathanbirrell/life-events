@@ -1,5 +1,6 @@
 import { JourneyStepTypesDO } from "../../../plugins/entities/journeySteps/types";
 import { IIntegratorPlugin } from "./basePlugin";
+import { CompletePlugin } from "./completePlugin";
 import { FormPlugin } from "./formPlugin";
 import { MessagePlugin } from "./messagePlugin";
 import { PaymentPlugin } from "./paymentPlugin";
@@ -15,6 +16,7 @@ class IntegratorPluginManager {
     form: FormPlugin,
     payment: PaymentPlugin,
     messaging: MessagePlugin,
+    complete: CompletePlugin,
   };
 
   getPlugin(stepType: JourneyStepTypesDO): IIntegratorPlugin {

@@ -15,6 +15,8 @@ import {
   ExecuteJourneyStep,
   JourneyStepExecutionResponse,
   TransitionJourneyStep,
+  JourneySummary,
+  GetJourneySummary,
 } from "../schemas";
 import { formatAPIResponse } from "../../utils/responseFormatter";
 import { authPermissions } from "../../types/authPermissions";
@@ -25,6 +27,7 @@ import {
   RunStepStatusEnum,
 } from "../../plugins/entities/run/types";
 import IntegratorEngine from "../../libraries/integratorEngine";
+import { CompleteStepDataDO } from "../../plugins/entities/journeySteps/types";
 
 const TAGS = ["Executor"];
 
@@ -273,12 +276,27 @@ export default async function executor(app: FastifyInstance) {
       const result = await engine.executeStep(step.stepData);
 
       /**
-       * The step will be marked as IN PROGRESS.
+       * This is the last step, active Run will be marked as COMPLETED.
+       * After this step there are no more steps, therefore no transition
+       * is needed, step must be marked as COMPLETED as well.
        */
-      await app.run.updateRunStep(activeRunStep.id, {
-        data: activeRunStep.data,
-        status: RunStepStatusEnum.IN_PROGRESS,
-      });
+      if (step.stepType === "complete") {
+        await app.run.updateRun(runId, RunStatusEnum.COMPLETED);
+        await app.run.updateRunStep(activeRunStep.id, {
+          data: {
+            runId,
+          },
+          status: RunStepStatusEnum.COMPLETED,
+        });
+      } else {
+        /**
+         * The step will be marked as IN PROGRESS.
+         */
+        await app.run.updateRunStep(activeRunStep.id, {
+          data: activeRunStep.data,
+          status: RunStepStatusEnum.IN_PROGRESS,
+        });
+      }
 
       reply.send(formatAPIResponse(result));
     },
@@ -374,22 +392,10 @@ export default async function executor(app: FastifyInstance) {
         await app.journeyStepConnections.getJourneyStepConnections(journeyId);
       const nextStepId = engine.getNextStep(step.id, stepConnections);
 
-      /**
-       * If there are no more steps in the Journey, the Run has to be marked as COMPLETED
-       * and the user will be redirected to the Journey's complete page.
-       */
       if (!nextStepId) {
-        await app.run.updateRun(runId, RunStatusEnum.COMPLETED);
-
-        reply.send(
-          formatAPIResponse({
-            url: new URL(
-              `/journey/${journeyId}/complete`,
-              process.env.INTEGRATOR_URL,
-            ).href,
-          }),
+        throw app.httpErrors.internalServerError(
+          "No further steps were found.",
         );
-        return;
       }
 
       /**
@@ -404,6 +410,59 @@ export default async function executor(app: FastifyInstance) {
             `/journey/${journeyId}/run/${runId}`,
             process.env.INTEGRATOR_URL,
           ).href,
+        }),
+      );
+    },
+  );
+
+  app.post<{
+    Reply: GenericResponse<JourneySummary> | Error;
+    Body: GetJourneySummary;
+  }>(
+    "/get-summary",
+    {
+      preValidation: (req, res) =>
+        app.checkPermissions(req, res, [authPermissions.RUN_SELF_READ]),
+      schema: {
+        tags: TAGS,
+        body: GetJourneySummary,
+        response: {
+          200: GenericResponse(JourneySummary),
+          401: HttpError,
+          404: HttpError,
+          500: HttpError,
+        },
+      },
+    },
+    async (request, reply) => {
+      const { journeyId, runId } = request.body;
+      const userId = request.userData?.userId;
+
+      if (!userId) {
+        throw app.httpErrors.unauthorized("Unauthorized!");
+      }
+
+      const run = await app.run.getUserRunById(runId, userId);
+      const journey = await app.journey.getJourneyPublicInfo(journeyId);
+      const journeySteps = await app.journeySteps.getJourneySteps(journeyId);
+
+      const completeStepData = journeySteps.find(
+        (step) => step.stepType === "complete",
+      )?.stepData;
+
+      if (!completeStepData) {
+        throw app.httpErrors.internalServerError(
+          "Complete step was not found.",
+        );
+      }
+
+      reply.send(
+        formatAPIResponse({
+          runId: run.id,
+          title: journey.title,
+          createdAt: run.createdAt,
+          actionLabel: (completeStepData as CompleteStepDataDO).label,
+          returnUrl: (completeStepData as CompleteStepDataDO).url,
         }),
       );
     },

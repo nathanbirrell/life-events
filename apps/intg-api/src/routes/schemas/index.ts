@@ -93,6 +93,7 @@ export const JourneyStepTypes = Type.Union([
   Type.Literal("form"),
   Type.Literal("payment"),
   Type.Literal("messaging"),
+  Type.Literal("complete"),
 ]);
 
 export const FormStepData = Type.Object({
@@ -107,10 +108,16 @@ export const PaymentStepData = Type.Object({
 
 export const MessagingStepData = Type.Object({});
 
+export const CompleteStepData = Type.Object({
+  label: Type.String(),
+  url: Type.String(),
+});
+
 export const StepData = Type.Union([
   FormStepData,
   PaymentStepData,
   MessagingStepData,
+  CompleteStepData,
 ]);
 
 export const JourneyStep = Type.Object({
@@ -318,3 +325,18 @@ export const TransitionJourneyStep = Type.Object({
   token: Type.Optional(Type.String()),
 });
 export type TransitionJourneyStep = Static<typeof TransitionJourneyStep>;
+
+export const JourneySummary = Type.Object({
+  runId: Type.String(),
+  title: Type.String(),
+  createdAt: Type.String(),
+  actionLabel: Type.String(),
+  returnUrl: Type.String(),
+});
+export type JourneySummary = Static<typeof JourneySummary>;
+
+export const GetJourneySummary = Type.Object({
+  journeyId: Type.String(),
+  runId: Type.String(),
+});
+export type GetJourneySummary = Static<typeof GetJourneySummary>;

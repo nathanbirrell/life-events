@@ -315,10 +315,20 @@ export default async function journeys(app: FastifyInstance) {
       paymentUrl: string;
       userId: string;
       organizationId: string;
+      actionLabel: string;
+      returnUrl: string;
     };
     Reply: GenericResponse<Id> | Error;
   }>("/create-journey", {}, async (request, reply) => {
-    const { title, formUrl, paymentUrl, userId, organizationId } = request.body;
+    const {
+      title,
+      formUrl,
+      paymentUrl,
+      userId,
+      organizationId,
+      actionLabel,
+      returnUrl,
+    } = request.body;
 
     const journey = await app.journey.createJourney({
       title,
@@ -350,6 +360,15 @@ export default async function journeys(app: FastifyInstance) {
       stepData: {},
     });
 
+    const completeStep = await app.journeySteps.createStep({
+      journeyId: journey.id,
+      stepType: "complete",
+      stepData: {
+        label: actionLabel,
+        url: returnUrl,
+      },
+    });
+
     await app.journeyStepConnections.createConnection({
       journeyId: journey.id,
       sourceStepId: formStep.id,
@@ -360,6 +379,12 @@ export default async function journeys(app: FastifyInstance) {
       journeyId: journey.id,
       sourceStepId: paymentStep.id,
       destinationStepId: messageStep.id,
+    });
+
+    await app.journeyStepConnections.createConnection({
+      journeyId: journey.id,
+      sourceStepId: messageStep.id,
+      destinationStepId: completeStep.id,
     });
 
     await app.journey.activateJourney({

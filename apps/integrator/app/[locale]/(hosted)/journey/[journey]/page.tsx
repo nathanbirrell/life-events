@@ -44,9 +44,7 @@ export default async (props: Props) => {
   if (!runId) {
     return (
       <div className="govie-width-container" style={{ width: "100%" }}>
-        <div className="two-columns-layout">
-          <div className="column">Something went wrong!</div>
-        </div>
+        <div className="column">Something went wrong!</div>
       </div>
     );
   }

@@ -87,7 +87,9 @@ export class JourneyRepo {
           user_id as "userId",
           organization_id as "organizationId",
           status,
-          initial_step_id as "initialStepId"
+          initial_step_id as "initialStepId",
+          created_at as "createdAt",
+          updated_at as "updatedAt"
         FROM journeys
         WHERE id = $1`,
       [journeyId],

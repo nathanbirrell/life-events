@@ -50,11 +50,13 @@ export default async ({ locale }: HeaderProps) => {
           }}
         >
           <div className={styles.leftSideContainer}>
-            <HamburgerMenu
-              userName={`${user.name}`}
-              publicServant={isPublicServant}
-              locale={locale}
-            />
+            {isPublicServant && (
+              <HamburgerMenu
+                userName={`${user.name}`}
+                publicServant={isPublicServant}
+                locale={locale}
+              />
+            )}
             <a
               href="/"
               className="govie-header__link govie-header__link--homepage"
@@ -63,27 +65,39 @@ export default async ({ locale }: HeaderProps) => {
               <HeaderSvg />
               <span className="govie-visually-hidden">gov.ie</span>
             </a>
-            <div className={styles.title}>
-              <strong>Journey Builder</strong>
-            </div>
+            {isPublicServant && (
+              <div className={styles.title}>
+                <strong>Journey Builder</strong>
+              </div>
+            )}
           </div>
           <div className={styles.rightsideContainer}>
             <LanguageSwitch theme="dark" />
-            <UserIcon initials={initials} />
+            {isPublicServant && (
+              <>
+                <UserIcon initials={initials} />
 
-            <Link
-              href={"/signout"}
-              prefetch={false}
-              style={{ display: "flex" }}
-              aria-label="signout"
-            >
-              <ds.Icon icon="logout" color={ds.colours.ogcio.white} size={22} />
-            </Link>
-            <BuildingBlockSelector locale={locale} />
+                <Link
+                  href={"/signout"}
+                  prefetch={false}
+                  style={{ display: "flex" }}
+                  aria-label="signout"
+                >
+                  <ds.Icon
+                    icon="logout"
+                    color={ds.colours.ogcio.white}
+                    size={22}
+                  />
+                </Link>
+                <BuildingBlockSelector locale={locale} />
+              </>
+            )}
           </div>
-          <div className={styles.buildingBlocksSelector}>
-            <BuildingBlockSelector locale={locale} />
-          </div>
+          {isPublicServant && (
+            <div className={styles.buildingBlocksSelector}>
+              <BuildingBlockSelector locale={locale} />
+            </div>
+          )}
         </div>
       </div>
     </header>

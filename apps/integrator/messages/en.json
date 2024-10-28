@@ -83,6 +83,13 @@
       "description": "Description"
     }
   },
+  "JourneyComplete": {
+    "title": "Thank you for your submission",
+    "description": "Your request has been submitted. Keep your submission ID for reference.",
+    "applicationFor": "Application for",
+    "submissionID": "Submission ID",
+    "dateOfRequest": "Date of request"
+  },
   "General": {
     "back": "Back",
     "continue": "Continue",

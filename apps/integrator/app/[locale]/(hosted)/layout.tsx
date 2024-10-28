@@ -5,6 +5,7 @@ import Footer from "../../components/Footer/Footer";
 import Banner from "../../components/Banner";
 import { getTranslations } from "next-intl/server";
 import { getLinks } from "../../utils";
+import { AuthenticationFactory } from "../../../libraries/authentication-factory";
 
 export default async function RootLayout({
   children,
@@ -15,6 +16,9 @@ export default async function RootLayout({
 }) {
   const t = await getTranslations("FeedbackBanner");
 
+  const { isPublicServant } =
+    await AuthenticationFactory.getInstance().getContext();
+
   const environment = String(process.env.ENVIRONMENT);
   const links = getLinks(environment, locale);
 
@@ -22,16 +26,18 @@ export default async function RootLayout({
     <>
       <Header locale={locale} />
       <div className="govie-width-container" style={{ width: "100%" }}>
-        <Banner
-          tag={t("tag")}
-          text={t.rich("bannerText", {
-            mail: (chunks) => (
-              <a className="govie-link" href={links.feedbackLink.href}>
-                {chunks}
-              </a>
-            ),
-          })}
-        />
+        {isPublicServant && (
+          <Banner
+            tag={t("tag")}
+            text={t.rich("bannerText", {
+              mail: (chunks) => (
+                <a className="govie-link" href={links.feedbackLink.href}>
+                  {chunks}
+                </a>
+              ),
+            })}
+          />
+        )}
         <div className="page-container">{children}</div>
       </div>
       <Footer />
